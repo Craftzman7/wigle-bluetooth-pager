@@ -6,8 +6,20 @@
 # Category: Reconnaissance
 
 if [ ! -f "wiglebluetooth" ]; then
-    ERROR_DIAGLOG "wiglebluetooth executable not found. Please compile it first."
-    return 0
+    LOG blue "wiglebluetooth binary not found. Would you like to download it now? "
+    LOG blue "Press UP to download, or DOWN to skip and exit the script."
+    choice=$(WAIT_FOR_INPUT)
+    if [ "$choice" == "UP" ]; then
+        LOG green "Downloading wiglebluetooth binary..."
+        if wget -q -O wiglebluetooth https://github.com/Craftzman7/wigle-bluetooth-pager/releases/latest/download/wiglebluetooth 2>/dev/null; then
+            LOG green "wiglebluetooth downloaded successfully."
+        else
+            ERROR_DIALOG "Failed to download wiglebluetooth. Please check your internet connection and try again."; exit 0
+        fi
+    else
+        LOG yellow "Skipping download. Exiting script."
+        exit 0
+    fi
 fi
 
 chmod +x wiglebluetooth
