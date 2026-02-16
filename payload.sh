@@ -1,5 +1,5 @@
 #!/bin/bash
-# Title: wigle-bluetooth
+# Title: wiglebluetooth
 # Description: Log BLE devices to a Wigle-compatible CSV file (requires GPS).
 # Author: Evelyn (@evecontextprotocol on Discord)
 # Version: 1.0
@@ -40,19 +40,19 @@ while true; do
 
     if [ "$choice" == "UP" ]; then
         if pgrep wiglebluetooth > /dev/null; then
-            LOG yellow "wigle-bluetooth is already running."
+            LOG yellow "wiglebluetooth is already running."
         else
-            LOG green "Starting wigle-bluetooth..."
+            LOG green "Starting wiglebluetooth..."
             ./wiglebluetooth &
-            LOG green "wigle-bluetooth started. Logging in /root/loot/wigle-bluetooth"
+            LOG green "wiglebluetooth started. Logging in /root/loot/wigle-bluetooth"
         fi
     elif [ "$choice" == "DOWN" ]; then
         if pgrep wiglebluetooth > /dev/null; then
-            LOG red "Stopping wigle-bluetooth..."
+            LOG red "Stopping wiglebluetooth..."
             killall wiglebluetooth
-            LOG red "wigle-bluetooth stopped."
+            LOG red "wiglebluetooth stopped."
         else
-            LOG yellow "wigle-bluetooth is not running."
+            LOG yellow "wiglebluetooth is not running."
         fi
     elif [ "$choice" == "RIGHT" ]; then
         # Use the latest CSV file in /root/loot/wigle-bluetooth and the latest CSV file in /root/loot/wigle
@@ -67,7 +67,7 @@ while true; do
             continue
         fi
         if pgrep wiglebluetooth > /dev/null; then
-            LOG red "Please stop the wigle-bluetooth process before combining CSV files."
+            LOG red "Please stop the wiglebluetooth process before combining CSV files."
             continue
         fi
         LOG blue "Disabling wigle mode"
