@@ -77,15 +77,22 @@ func main() {
 	defer writer.Flush()
 
 	// CSV pre-header
-	// Yes, I'm hardcoding the firmware version.
-	// I could not figure out for the life of me how to get the Pineapple's
-	// firmware version from anywhere on the system and I figured it just wasn't worth it.
-	// I'm just going to leave it commented for now until I find a way.
-	// writer.Write([]string{
-	// 	"WigleWifi-1.6", "appRelease=1.0.7", "model=pineapplepager",
-	// 	"release=1.0.7", "device=pineapplepager", "display=na", "board=na",
-	// 	"brand=Hak5", "star=Sol", "body=3", "subBody=0",
-	// })
+	// Firmware version is first line in /etc/pineapplepager/version
+	// Second line is branch, discard it.
+	versionFile, err := os.ReadFile("/etc/pineapplepager/version")
+	firmwareVersion := "unknown"
+	if err == nil {
+		lines := strings.SplitN(string(versionFile), "\n", 2)
+		if len(lines) > 0 {
+			firmwareVersion = lines[0]
+		}
+	}
+
+	writer.Write([]string{
+		"WigleWifi-1.6", fmt.Sprintf("apprelease=%s", firmwareVersion), "model=pineapplepager",
+		fmt.Sprintf("release=%s", firmwareVersion), "device=pineapplepager", "display=na", "board=na",
+		"brand=Hak5", "star=Sol", "body=3", "subBody=0",
+	})
 
 	// WiGLE Bluetooth CSV header.
 	writer.Write([]string{

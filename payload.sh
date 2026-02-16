@@ -6,11 +6,15 @@
 # Category: Reconnaissance
 
 if [ ! -f "wiglebluetooth" ]; then
-    echo "Error: wiglebluetooth executable not found. Please compile it first."
-    exit 1
+    ERROR_DIAGLOG "wiglebluetooth executable not found. Please compile it first."
+    return 0
 fi
 
 chmod +x wiglebluetooth
+
+LOG red "PLEASE ENSURE YOUR GPS IS CONNECTED AND FUNCTIONAL BEFORE STARTING THE PROCESS."
+LOG red "THE PROCESS WILL EXIT IF THE GPS IS NOT DETECTED."
+    
 
 while true; do
     LOG ""
@@ -33,7 +37,7 @@ while true; do
     elif [ "$choice" == "DOWN" ]; then
         if pgrep wiglebluetooth > /dev/null; then
             LOG red "Stopping wigle-bluetooth..."
-            kilall wiglebluetooth
+            killall wiglebluetooth
             LOG red "wigle-bluetooth stopped."
         else
             LOG yellow "wigle-bluetooth is not running."
@@ -50,11 +54,19 @@ while true; do
             LOG yellow "No Wi-Fi CSV file found in /root/loot/wigle."
             continue
         fi
+        if pgrep wiglebluetooth > /dev/null; then
+            LOG red "Please stop the wigle-bluetooth process before combining CSV files."
+            continue
+        fi
+        LOG blue "Disabling wigle mode"
+        WIGLE_STOP
         combined_csv="/root/loot/wigle/wigle-combined_$(date +%Y%m%d_%H%M%S).csv"
         mkdir -p /root/loot/wigle
-        echo "MAC,SSID,AuthMode,FirstSeen,Channel,Latitude,Longitude,Altitude" > "$combined_csv"
-        tail -n +2 "$latest_bluetooth_csv" >> "$combined_csv"
-        tail -n +2 "$latest_wifi_csv" >> "$combined_csv"
+        # Copy the first two lines (headers) from the Bluetooth CSV to the combined CSV
+        head -n 2 "$latest_bluetooth_csv" > "$combined_csv"
+        # Append the data from both CSV files to the combined CSV (skipping headers)
+        tail -n +3 "$latest_bluetooth_csv" >> "$combined_csv"
+        tail -n +3 "$latest_wifi_csv" >> "$combined_csv"
         LOG green "Combined CSV created at $combined_csv"
     elif [ "$choice" == "LEFT" ]; then
         LOG yellow "Exiting the script..."
