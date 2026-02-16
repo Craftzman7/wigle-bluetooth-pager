@@ -30,9 +30,9 @@ LOG red "THE PROCESS WILL EXIT IF THE GPS IS NOT DETECTED."
 
 while true; do
     LOG ""
-    LOG green "Press UP to start the wigle-bluetooth process"
-    LOG red "Press DOWN to stop the wigle-bluetooth process"
-    LOG blue "Press right to combine the latest wigle-bluetooth CSV with the Pineapple's latest CSV."
+    LOG green "Press UP to start the wiglebluetooth process"
+    LOG red "Press DOWN to stop the wiglebluetooth process"
+    LOG blue "Press right to combine the latest wiglebluetooth CSV with the Pineapple's latest CSV."
     LOG yellow "Press LEFT to exit the script"
     LOG ""
 
